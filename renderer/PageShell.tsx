@@ -26,8 +26,8 @@ export const PageShell: React.FC<Props> = ({
 }) => {
   const links = {
     '/': 'Home',
-    '/repo/xiniha/vite-ssr-relay-template/issues': 'Issues',
-    '/repo/xiniha/vite-ssr-relay-template/issues/create': 'Create Issue',
+    '/repo/moogieon/vite-ssr-relay-template/issues': 'Issues',
+    '/repo/moogieon/vite-ssr-relay-template/issues/create': 'Create Issue',
   }
 
   return (

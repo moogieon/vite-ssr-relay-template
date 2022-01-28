@@ -9,7 +9,7 @@ interface Props {
 // If a page has `query` exported, it will be prefetched and SSR'd.
 export const query = graphql`
   query indexPageQuery {
-    repository(owner: "XiNiHa", name: "vite-ssr-relay-template") {
+    repository(owner: "moogieon", name: "vite-ssr-relay-template") {
       name
       stargazerCount
       issues(first: 0) {
