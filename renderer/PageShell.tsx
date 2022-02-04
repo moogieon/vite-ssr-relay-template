@@ -28,6 +28,7 @@ export const PageShell: React.FC<Props> = ({
     '/': 'Home',
     '/repo/moogieon/vite-ssr-relay-template/issues': 'Issues',
     '/repo/moogieon/vite-ssr-relay-template/issues/create': 'Create Issue',
+    '/repo/moogieon/vite-ssr-relay-template/issue': 'Issue',
   }
 
   return (
