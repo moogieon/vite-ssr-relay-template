@@ -1,19 +1,33 @@
 import React from 'react'
 import { graphql, usePreloadedQuery, type PreloadedQuery } from 'react-relay'
 import { IssueDetailComponent } from '../components/issueDetail/IssueDetail'
-import type { issueDetailPageQuery } from './__generated__/issueDetailPageQuery.graphql'
+import { GetQueryVariables } from '../renderer/types'
+import type {
+  issueDetailPageQuery,
+  issueDetailPageQueryVariables,
+} from './__generated__/issueDetailPageQuery.graphql'
 
 interface Props {
   queryRef: PreloadedQuery<issueDetailPageQuery>
 }
-
 interface RouteParams {
-  issueNumber: Number
+  owner: string
+  name: string
+  $issueNumber: Number
 }
-
+export const getQueryVariables: GetQueryVariables<
+  RouteParams,
+  issueDetailPageQueryVariables
+> = (routeParams) => ({
+  ...routeParams,
+})
 export const query = graphql`
-  query issueDetailPageQuery($issueNumber: Int!) {
-    repository(name: "vite-ssr-relay-template", owner: "moogieon") {
+  query issueDetailPageQuery(
+    $owner: String!
+    $name: String!
+    $issueNumber: Int!
+  ) {
+    repository(name: $name, owner: $owner) {
       ...IssueDetail_repository
     }
   }

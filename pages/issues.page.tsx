@@ -35,8 +35,9 @@ export const query = graphql`
     $cursor: String
     $first: Int!
     $filter: IssueFilters
+ 
   ) {
-    repository(name: $name, owner: $owner) {
+    repository(name: $name, owner: $owner ) {
       ...IssueList_repository
     }
   }
