@@ -12,6 +12,7 @@ const IssueComponent: React.FC<Props> = ({ issue }) => {
     graphql`
       fragment Issue_issue on Issue {
         title
+        number
         author {
           login
         }
@@ -21,12 +22,15 @@ const IssueComponent: React.FC<Props> = ({ issue }) => {
     `,
     issue
   )
-
   return (
     <div>
-      <a href={data.url} className="text-lg underline transition-colors hover:text-gray-500">
+      <a
+        href={`/repo/moogieon/vite-ssr-relay-template/issue/${data.number}`}
+        className="text-lg underline transition-colors hover:text-gray-500"
+      >
         <h3>{data.title}</h3>
       </a>
+
       <p>{data.author?.login}</p>
       <p>{new Date(data.createdAt).toLocaleString()}</p>
     </div>
