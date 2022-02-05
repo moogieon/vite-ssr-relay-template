@@ -9,7 +9,7 @@ export const IssueDetailComponent: React.FC<Props> = ({ repository }) => {
   const data = useFragment(
     graphql`
       fragment IssueDetail_repository on Repository {
-        issue(number: $issueNumber) {
+        issue(number: 10) {
           body
           createdAt
           number
