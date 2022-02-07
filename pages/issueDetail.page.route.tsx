@@ -1,1 +1,1 @@
-export default '/repo/:owner/:name/issue/:issueNumber'
+export default '/repo/:owner/:name/issues/:issueNumber'
