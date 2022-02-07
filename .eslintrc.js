@@ -1,5 +1,6 @@
 module.exports = {
   root: true,
+  node:true,
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint'],
   extends: [

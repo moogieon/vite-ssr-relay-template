@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import { graphql, usePaginationFragment } from 'react-relay'
+import { graphql, useFragment, usePaginationFragment } from 'react-relay'
 import Button from '../Button'
 import IssueComponent from './Issue'
 import type { IssueList_repository$key } from './__generated__/IssueList_repository.graphql'
@@ -14,6 +14,10 @@ const IssueListComponent: React.FC<Props> = ({ repository }) => {
     graphql`
       fragment IssueList_repository on Repository
       @refetchable(queryName: "IssueListPaginationQuery") {
+        owner {
+          login
+        }
+        name
         issues(
           after: $cursor
           first: $first
@@ -53,7 +57,11 @@ const IssueListComponent: React.FC<Props> = ({ repository }) => {
               edge?.node && (
                 <li key={i} className="ml-4 my-2">
                   <Suspense fallback={'Issue loading...'}>
-                    <IssueComponent issue={edge.node} />
+                    <IssueComponent
+                      issue={edge.node}
+                      repoOwner={data.owner.login}
+                      repoName={data.name}
+                    />
                   </Suspense>
                 </li>
               )
