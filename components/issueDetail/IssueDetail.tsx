@@ -1,17 +1,20 @@
 import React from 'react'
-import { useFragment, graphql } from 'react-relay'
+import { graphql, usePaginationFragment } from 'react-relay'
 import { IssueDetail_repository$key } from './__generated__/IssueDetail_repository.graphql'
 import MarkDownRenderer from '../MarkDownRenderer'
 import IssueCommentsComponent from './issueComments/IssueComments'
+import SuspenseImage from '../SuspenseImage'
+import Button from '../Button'
 
 interface Props {
   repository: IssueDetail_repository$key
 }
 
 const IssueDetailComponent: React.FC<Props> = ({ repository }) => {
-  const data = useFragment(
+  const { data, isLoadingNext, loadNext } = usePaginationFragment(
     graphql`
-      fragment IssueDetail_repository on Repository {
+      fragment IssueDetail_repository on Repository
+      @refetchable(queryName: "IssueDetailPaginationQuery") {
         issue(number: $issueNumber) {
           body
           createdAt
@@ -19,16 +22,17 @@ const IssueDetailComponent: React.FC<Props> = ({ repository }) => {
           title
           author {
             login
-            ... on User {
-              email
-              avatarUrl
-            }
+            avatarUrl
           }
-          comments(first: 10) {
+          comments(after: $cursor, first: $first)
+            @connection(key: "issueDetail_comments") {
             edges {
               node {
                 ...IssueComments_comment
               }
+            }
+            pageInfo {
+              hasNextPage
             }
           }
         }
@@ -40,27 +44,31 @@ const IssueDetailComponent: React.FC<Props> = ({ repository }) => {
   return (
     <>
       {data.issue && (
-        <div>
-          <div className="text-2xl px-2">
+        <div className="w-[80%]">
+          <div className="text-2xl px-2 mb-10">
             {data.issue.title} <span> #{data.issue.number}</span>
           </div>
-          <div className="flex flex-col border px-2">
-            <div className=" flex items-center">
-              <img
-                className="rounded-1/2 border w-20 h-20"
-                src={data.issue.author?.avatarUrl}
-              />
-              <div className="font-extrabold">
-                {data.issue.author?.login}
-                <span className="text-gray-500 px-2">
-                  {' '}
-                  {new Date(data.issue.createdAt).toLocaleString()}
-                </span>
+          <div className="flex">
+            <SuspenseImage
+              className="rounded-1/2 border w-20 h-20 mr-2"
+              title={`${data.issue.author?.login}'s avatar`}
+              src={data.issue.author?.avatarUrl as string}
+            />
+            <div className="flex flex-col border rounded-lg px-2 overflow-x-scroll w-[50%]">
+              <div className=" flex items-center">
+                <div className="font-extrabold">
+                  {data.issue.author?.login}
+                  <span className="text-gray-500 px-2">
+                    {' '}
+                    {new Date(data.issue.createdAt).toLocaleString()}
+                  </span>
+                </div>
               </div>
+              <MarkDownRenderer contents={data.issue.body} />
             </div>
-            <MarkDownRenderer contents={data.issue.body} />
           </div>
-          <ul>
+
+          <ul className="pl-2">
             {(data.issue.comments.edges ?? []).map(
               (edge, i) =>
                 edge?.node && (
@@ -70,6 +78,11 @@ const IssueDetailComponent: React.FC<Props> = ({ repository }) => {
                 )
             )}
           </ul>
+          {isLoadingNext
+            ? 'Loading more...'
+            : data.issue.comments.pageInfo.hasNextPage && (
+                <Button onClick={() => loadNext(10)}>Load more</Button>
+              )}
         </div>
       )}
     </>

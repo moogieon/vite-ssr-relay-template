@@ -3,7 +3,6 @@ import { graphql, usePreloadedQuery, type PreloadedQuery } from 'react-relay'
 import IssueDetailComponent from '../components/issueDetail/IssueDetail'
 import { GetQueryVariables } from '../renderer/types'
 
-
 import type {
   issueDetailPageQuery,
   issueDetailPageQueryVariables,
@@ -23,6 +22,7 @@ export const getQueryVariables: GetQueryVariables<
 > = (routeParams) => ({
   ...routeParams,
   issueNumber: parseInt(routeParams.issueNumber),
+  first: 10,
 })
 
 export const query = graphql`
@@ -30,6 +30,8 @@ export const query = graphql`
     $owner: String!
     $name: String!
     $issueNumber: Int!
+    $first: Int!
+    $cursor: String
   ) {
     repository(name: $name, owner: $owner) {
       ...IssueDetail_repository
@@ -42,7 +44,11 @@ export const Page: React.FC<Props> = ({ queryRef }) => {
 
   return (
     <>
-      {data.repository && <IssueDetailComponent repository={data.repository} />}
+      {data.repository && (
+        <React.Suspense fallback="Loading...">
+          <IssueDetailComponent repository={data.repository} />
+        </React.Suspense>
+      )}
     </>
   )
 }

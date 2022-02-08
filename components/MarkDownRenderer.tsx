@@ -8,7 +8,7 @@ interface Props {
 
 const MarkDownRenderer: React.FC<Props> = ({ contents }) => {
   return (
-    <div className='px-10'>
+    <div>
       <ReactMarkdown children={contents} remarkPlugins={[remarkGfm]} />
     </div>
   )

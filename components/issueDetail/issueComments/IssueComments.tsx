@@ -1,5 +1,7 @@
 import React from 'react'
 import { useFragment, graphql } from 'react-relay'
+import MarkDownRenderer from '../../MarkDownRenderer'
+import SuspenseImage from '../../SuspenseImage'
 import { IssueComments_comment$key } from './__generated__/IssueComments_comment.graphql'
 
 interface Props {
@@ -12,29 +14,37 @@ const IssueCommentsComponent: React.FC<Props> = ({ comment }) => {
       fragment IssueComments_comment on Comment {
         body
         author {
-          ... on User {
-            avatarUrl
-          }
+          avatarUrl
           login
         }
         createdAt
+        authorAssociation
       }
     `,
     comment
   )
   return (
     <>
-      <div className="rounded-lg  border px-2">
-        <div className="flex items-center">
-          <img className="rounded-1/2 w-20 h-20" src={data.author?.avatarUrl} />
-          <div className='font-extrabold '>
-            {data.author?.login}
-            <span className="px-2 text-gray-500">
-              {new Date(data.createdAt).toLocaleString()}
-            </span>
+      <div className="flex">
+        <SuspenseImage
+          className="rounded-1/2 border w-20 h-20 mr-2"
+          title={`${data.author?.login}'s avatar`}
+          src={data.author?.avatarUrl as string}
+        />
+        <div className="rounded-lg  border px-2 w-[70%] overflow-x-auto">
+          <div className="flex items-center">
+            <div className="font-extrabold ">
+              {data.author?.login}
+              <span className="px-2 text-gray-500">
+                {new Date(data.createdAt).toLocaleString()}
+              </span>
+              <span className="border rounded-lg text-sm">
+                {data.authorAssociation}
+              </span>
+            </div>
           </div>
+          <MarkDownRenderer contents={data.body} />
         </div>
-        {data.body}
       </div>
     </>
   )
