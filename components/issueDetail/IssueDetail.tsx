@@ -20,6 +20,7 @@ const IssueDetailComponent: React.FC<Props> = ({ repository }) => {
           createdAt
           number
           title
+          authorAssociation
           author {
             login
             avatarUrl
@@ -44,23 +45,31 @@ const IssueDetailComponent: React.FC<Props> = ({ repository }) => {
   return (
     <>
       {data.issue && (
-        <div className="w-[80%]">
+        <div className="container]">
           <div className="text-2xl px-2 mb-10">
             {data.issue.title} <span> #{data.issue.number}</span>
           </div>
           <div className="flex">
-            <SuspenseImage
-              className="rounded-1/2 border w-20 h-20 mr-2"
-              title={`${data.issue.author?.login}'s avatar`}
-              src={data.issue.author?.avatarUrl as string}
-            />
-            <div className="flex flex-col border rounded-lg px-2 overflow-x-scroll w-[50%]">
+            {typeof window !== 'undefined' ? (
+              <SuspenseImage
+                className="rounded-1/2 border w-20 h-20 mr-2"
+                title={`${data.issue.author?.login}'s avatar`}
+                src={data.issue.author?.avatarUrl as string}
+              />
+            ) : (
+              <div />
+            )}
+
+            <div className="flex flex-col border rounded-lg px-2 overflow-x-scroll w-[80%]">
               <div className=" flex items-center">
                 <div className="font-extrabold">
                   {data.issue.author?.login}
                   <span className="text-gray-500 px-2">
                     {' '}
                     {new Date(data.issue.createdAt).toLocaleString()}
+                  </span>
+                  <span className="border rounded-lg text-sm">
+                    {data.issue.authorAssociation}
                   </span>
                 </div>
               </div>
