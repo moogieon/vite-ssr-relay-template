@@ -6,7 +6,7 @@ interface Props {
   title: string
   className: string
 }
-typeof window === 'undefined'
+
 const SuspenseImage: React.FC<Props> = (props) => {
   const { src, title } = props
   if (src != null) {

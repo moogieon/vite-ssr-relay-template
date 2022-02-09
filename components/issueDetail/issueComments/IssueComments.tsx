@@ -26,12 +26,16 @@ const IssueCommentsComponent: React.FC<Props> = ({ comment }) => {
   return (
     <>
       <div className="flex">
-        <SuspenseImage
-          className="rounded-1/2 border w-20 h-20 mr-2"
-          title={`${data.author?.login}'s avatar`}
-          src={data.author?.avatarUrl as string}
-        />
-        <div className="rounded-lg  border px-2 w-[70%] overflow-x-auto">
+        {typeof window !== 'undefined' ? (
+          <SuspenseImage
+            className="rounded-1/2 border w-20 h-20 mr-2"
+            title={`${data.author?.login}'s avatar`}
+            src={data.author?.avatarUrl as string}
+          />
+        ) : (
+          <div />
+        )}
+        <div className="rounded-lg  border px-2 w-[80%] overflow-x-auto">
           <div className="flex items-center">
             <div className="font-extrabold ">
               {data.author?.login}
