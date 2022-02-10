@@ -1,20 +1,19 @@
 import React from 'react'
-import { graphql, usePaginationFragment } from 'react-relay'
+import { graphql, useFragment, usePaginationFragment } from 'react-relay'
 import { IssueDetail_repository$key } from './__generated__/IssueDetail_repository.graphql'
 import MarkDownRenderer from '../MarkDownRenderer'
-import IssueCommentsComponent from './issueComments/IssueComments'
 import SuspenseImage from '../SuspenseImage'
 import Button from '../Button'
+import IssueCommentsListComponent from './issueComments/IssueCommentsList'
 
 interface Props {
   repository: IssueDetail_repository$key
 }
 
 const IssueDetailComponent: React.FC<Props> = ({ repository }) => {
-  const { data, isLoadingNext, loadNext } = usePaginationFragment(
+  const data = useFragment(
     graphql`
-      fragment IssueDetail_repository on Repository
-      @refetchable(queryName: "IssueDetailPaginationQuery") {
+      fragment IssueDetail_repository on Repository {
         issue(number: $issueNumber) {
           body
           createdAt
@@ -25,17 +24,7 @@ const IssueDetailComponent: React.FC<Props> = ({ repository }) => {
             login
             avatarUrl
           }
-          comments(after: $cursor, first: $first)
-            @connection(key: "issueDetail_comments") {
-            edges {
-              node {
-                ...IssueComments_comment
-              }
-            }
-            pageInfo {
-              hasNextPage
-            }
-          }
+          ...IssueCommentsList_issue
         }
       }
     `,
@@ -76,8 +65,8 @@ const IssueDetailComponent: React.FC<Props> = ({ repository }) => {
               <MarkDownRenderer contents={data.issue.body} />
             </div>
           </div>
-
-          <ul className="pl-2">
+          <IssueCommentsListComponent issue={data.issue} />
+          {/* <ul className="pl-2">
             {(data.issue.comments.edges ?? []).map(
               (edge, i) =>
                 edge?.node && (
@@ -86,12 +75,7 @@ const IssueDetailComponent: React.FC<Props> = ({ repository }) => {
                   </li>
                 )
             )}
-          </ul>
-          {isLoadingNext
-            ? 'Loading more...'
-            : data.issue.comments.pageInfo.hasNextPage && (
-                <Button onClick={() => loadNext(10)}>Load more</Button>
-              )}
+          </ul> */}
         </div>
       )}
     </>
