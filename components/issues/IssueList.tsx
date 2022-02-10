@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react'
+import React, { Suspense, useTransition } from 'react'
 import { graphql, useFragment, usePaginationFragment } from 'react-relay'
 import Button from '../Button'
 import IssueComponent from './Issue'
@@ -10,6 +10,8 @@ interface Props {
 
 // Component that renders the list of issues for the repository using Relay's `usePaginationFragment()`.
 const IssueListComponent: React.FC<Props> = ({ repository }) => {
+  const [isPending, startTransition] = useTransition()
+
   const { data, loadNext, isLoadingNext, refetch } = usePaginationFragment(
     graphql`
       fragment IssueList_repository on Repository
@@ -68,11 +70,18 @@ const IssueListComponent: React.FC<Props> = ({ repository }) => {
           )
           .filter(Boolean)}
       </ul>
-      {isLoadingNext
-        ? 'Loading more...'
-        : data.issues.pageInfo.hasNextPage && (
-            <Button onClick={() => loadNext(10)}>Load more</Button>
-          )}
+      {data.issues.pageInfo.hasNextPage && (
+        <Button
+          onClick={() => {
+            startTransition(() => {
+              loadNext(10)
+            })
+          }}
+          disabled={isPending || isLoadingNext}
+        >
+          {isPending || isLoadingNext ? 'Loading....' : 'Load more'}
+        </Button>
+      )}
     </div>
   )
 }
