@@ -1,15 +1,16 @@
 import React from 'react'
-import ReactMarkdown from 'react-markdown'
+import ReactMarkdown, { Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
 interface Props {
-  contents: string
+  source: string
+  renderers: Record<string, Components>
 }
 
-const MarkDownRenderer: React.FC<Props> = ({ contents }) => {
+const MarkDownRenderer: React.FC<Props> = ({ source }) => {
   return (
     <div>
-      <ReactMarkdown children={contents} remarkPlugins={[remarkGfm]} />
+      <ReactMarkdown children={source} remarkPlugins={[remarkGfm]} />
     </div>
   )
 }
