@@ -1,13 +1,11 @@
 import React from 'react'
 import JSResource from './JSResource'
 
-interface Props {
-  src: string
-  title: string
-  className: string
-}
+type Props = { className?: string }
 
-const SuspenseImage: React.FC<Props> = (props) => {
+const SuspenseImage: React.FC<Props> = (
+  props: React.ImgHTMLAttributes<HTMLImageElement>
+) => {
   const { src, title } = props
   if (src != null) {
     const resource = JSResource(src, () => {

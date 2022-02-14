@@ -1861,6 +1861,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"emojilib@npm:^2.0.0":
+  version: 2.4.0
+  resolution: "emojilib@npm:2.4.0"
+  checksum: ea241c342abda5a86ffd3a15d8f4871a616d485f700e03daea38c6ce38205847cea9f6ff8d5e962c00516b004949cc96c6e37b05559ea71a0a496faba53b56da
+  languageName: node
+  linkType: hard
+
 "encodeurl@npm:~1.0.2":
   version: 1.0.2
   resolution: "encodeurl@npm:1.0.2"
@@ -3998,6 +4005,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"moji-translate@npm:^1.0.8":
+  version: 1.0.8
+  resolution: "moji-translate@npm:1.0.8"
+  dependencies:
+    emojilib: ^2.0.0
+  checksum: c7761a32deb1a13dfed6bc5420c9504c3f05eb932685e5f92a0f64fd04f6a3582538fc304b3ba26e8d6249ee38d9ba45b215ec50e7fd1ce58c3d1e70ce900875
+  languageName: node
+  linkType: hard
+
 "mri@npm:^1.1.0":
   version: 1.2.0
   resolution: "mri@npm:1.2.0"
@@ -4704,6 +4720,7 @@ __metadata:
     eslint-config-prettier: ^8.3.0
     esno: ^0.14.0
     h3: ^0.3.8
+    moji-translate: ^1.0.8
     ohmyfetch: ^0.4.14
     prettier: ^2.5.1
     react: rc

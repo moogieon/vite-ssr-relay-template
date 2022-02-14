@@ -3,9 +3,8 @@ import { graphql, useFragment, usePaginationFragment } from 'react-relay'
 import { IssueDetail_repository$key } from './__generated__/IssueDetail_repository.graphql'
 import MarkDownRenderer from '../MarkDownRenderer'
 import SuspenseImage from '../SuspenseImage'
-import Button from '../Button'
 import IssueCommentsListComponent from './issueComments/IssueCommentsList'
-
+import translate from 'moji-translate'
 interface Props {
   repository: IssueDetail_repository$key
 }
@@ -23,6 +22,11 @@ const IssueDetailComponent: React.FC<Props> = ({ repository }) => {
           author {
             login
             avatarUrl
+          }
+          reactions(first: $first) {
+            nodes {
+              content
+            }
           }
           ...IssueCommentsList_issue
         }
@@ -48,7 +52,6 @@ const IssueDetailComponent: React.FC<Props> = ({ repository }) => {
             ) : (
               <div />
             )}
-
             <div className="flex flex-col border rounded-lg px-2 overflow-x-scroll w-[80%]">
               <div className=" flex items-center">
                 <div className="font-extrabold">
@@ -60,22 +63,25 @@ const IssueDetailComponent: React.FC<Props> = ({ repository }) => {
                   <span className="border rounded-lg text-sm">
                     {data.issue.authorAssociation}
                   </span>
+                  <ul className="flex">
+                    {data.issue.reactions.nodes?.map((emo, idx) => (
+                      <li
+                        key={idx}
+                        className="rounded-1/2 border w-7 text-center mr-1"
+                      >
+                        {translate.translate(emo?.content.replace('_', ''))}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
-              <MarkDownRenderer contents={data.issue.body} />
+              <MarkDownRenderer
+                source={data.issue.body}
+                renderers={{ image: SuspenseImage }}
+              />
             </div>
           </div>
           <IssueCommentsListComponent issue={data.issue} />
-          {/* <ul className="pl-2">
-            {(data.issue.comments.edges ?? []).map(
-              (edge, i) =>
-                edge?.node && (
-                  <li key={i} className="my-10 pl-2">
-                    <IssueCommentsComponent comment={edge?.node} />
-                  </li>
-                )
-            )}
-          </ul> */}
         </div>
       )}
     </>

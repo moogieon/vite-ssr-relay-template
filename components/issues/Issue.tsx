@@ -18,6 +18,7 @@ const IssueComponent: React.FC<Props> = ({ issue, repoOwner, repoName }) => {
         author {
           login
         }
+
         createdAt
         url
       }

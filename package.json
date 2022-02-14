@@ -18,6 +18,7 @@
     "cross-env": "^7.0.3",
     "esno": "^0.14.0",
     "h3": "^0.3.8",
+    "moji-translate": "^1.0.8",
     "ohmyfetch": "^0.4.14",
     "react": "rc",
     "react-dom": "rc",
