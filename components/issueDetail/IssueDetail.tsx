@@ -5,6 +5,7 @@ import MarkDownRenderer from '../MarkDownRenderer'
 import SuspenseImage from '../SuspenseImage'
 import IssueCommentsListComponent from './issueComments/IssueCommentsList'
 import translate from 'moji-translate'
+import { AddReaction } from '../../pages/addReaction'
 interface Props {
   repository: IssueDetail_repository$key
 }
@@ -19,6 +20,7 @@ const IssueDetailComponent: React.FC<Props> = ({ repository }) => {
           number
           title
           authorAssociation
+          id
           author {
             login
             avatarUrl
@@ -45,9 +47,8 @@ const IssueDetailComponent: React.FC<Props> = ({ repository }) => {
           <div className="flex">
             {typeof window !== 'undefined' ? (
               <SuspenseImage
-                className="rounded-1/2 border w-20 h-20 mr-2"
-                title={`${data.issue.author?.login}'s avatar`}
-                src={data.issue.author?.avatarUrl as string}
+                alt={`${data.issue.author?.login}'s avatar`}
+                src={data.issue.author?.avatarUrl}
               />
             ) : (
               <div />
@@ -73,12 +74,10 @@ const IssueDetailComponent: React.FC<Props> = ({ repository }) => {
                       </li>
                     ))}
                   </ul>
+                  <AddReaction id={data.issue.id}/>
                 </div>
               </div>
-              <MarkDownRenderer
-                source={data.issue.body}
-                renderers={{ image: SuspenseImage }}
-              />
+              <MarkDownRenderer source={data.issue.body} />
             </div>
           </div>
           <IssueCommentsListComponent issue={data.issue} />
