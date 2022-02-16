@@ -19,7 +19,6 @@ interface Props {
 
 // Basic mutation example using Relay.
 export const AddReaction: React.FC<Props> = ({ id }) => {
-  // const data = usePreloadedQuery<createIssueQuery>(query, queryRef)
   const [commit, isInFlight] = useMutation<addReactionMutation>(graphql`
     mutation addReactionMutation($input: AddReactionInput!) {
       addReaction(input: $input) {
@@ -55,21 +54,18 @@ export const AddReaction: React.FC<Props> = ({ id }) => {
     <form onSubmit={onFormSubmit}>
       <div className="m-1">
         <label htmlFor="title-input">
-          <select name="choice">
+          <select name="title" id="title-input">
             <option value="">--emoji--</option>
-            <option value="first">First Value</option>
-            <option value="second">Second Value</option>
-            <option value="third">Third Value</option>
+            <option value="THUMBS_UP">👍</option>
+            <option value="THUMBS_DOWN">👎</option>
+            <option value="LAUGH">😆</option>
+            <option value="HOORAY">🎉</option>
+            <option value="CONFUSED">😕</option>
+            <option value="HEART">❤️</option>
+            <option value="ROCKET">🚀</option>
+            <option value="EYES">👀</option>
           </select>
         </label>
-
-        <input
-          id="title-input"
-          type="text"
-          name="title"
-          required
-          className="mx-2 border-b border-gray-500"
-        />
       </div>
       <Button type="submit" disabled={isInFlight}>
         {isInFlight ? 'Creating...' : 'Create'}
