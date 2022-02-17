@@ -1,13 +1,6 @@
 import React from 'react'
-import {
-  graphql,
-  usePreloadedQuery,
-  useMutation,
-  type PreloadedQuery,
-} from 'react-relay'
+import { graphql, useMutation, ConnectionHandler } from 'react-relay'
 import Button from '../components/Button'
-import type { createIssueQuery } from './__generated__/createIssueQuery.graphql'
-import { query } from './createIssue.page'
 import {
   addReactionMutation,
   ReactionContent,
@@ -15,16 +8,24 @@ import {
 
 interface Props {
   id: string
+  reactions: any
 }
 
 // Basic mutation example using Relay.
-export const AddReaction: React.FC<Props> = ({ id }) => {
+export const AddReaction: React.FC<Props> = ({ id, reactions }) => {
   const [commit, isInFlight] = useMutation<addReactionMutation>(graphql`
     mutation addReactionMutation($input: AddReactionInput!) {
       addReaction(input: $input) {
-        clientMutationId
-        reaction {
-          content
+        subject {
+          ... on Issue {
+            id
+            reactions(first: 10) {
+              nodes {
+                id
+                content
+              }
+            }
+          }
         }
       }
     }
@@ -35,7 +36,6 @@ export const AddReaction: React.FC<Props> = ({ id }) => {
 
     const formData = new FormData(e.currentTarget)
     const title = formData.get('title')
-    const body = formData.get('body')
 
     commit({
       variables: {
@@ -44,7 +44,37 @@ export const AddReaction: React.FC<Props> = ({ id }) => {
           content: title as ReactionContent,
         },
       },
+      optimisticResponse: {
+        addReaction: {
+          subject: {
+            __typename: 'Issue',
+            id,
+            reactions: {
+              nodes: [
+                ...reactions,
+                {
+                  id: '_',
+                  content: title
+                }
+              ]
+            }
+          }
+        },
+      },
+      // optimisticUpdater(store) {
+      //   const userRecord = store.get(id)
+      //   const edge = store
+      //     .getRootField('addReaction')
+      //     .getLinkedRecord('reaction')
+      //     .getLinkedRecord('reactable')
+      //     .getLinkedRecord('reactions')
+      //     .getLinkedRecord('totalCount')
+
+      //   userRecord?.setValue(edge.getValue('totalCount') + 1, 'content')
+      //   // feedbackRecord?.setValue(true, 'content')
+      // },
       onCompleted(res) {
+        console.log(res)
         console.log('good')
       },
     })
