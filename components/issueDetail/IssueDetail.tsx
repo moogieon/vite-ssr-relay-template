@@ -74,7 +74,10 @@ const IssueDetailComponent: React.FC<Props> = ({ repository }) => {
                       </li>
                     ))}
                   </ul>
-                  <AddReaction id={data.issue.id}/>
+                  <AddReaction
+                    id={data.issue.id}
+                    reactions={data.issue.reactions.nodes}
+                  />
                 </div>
               </div>
               <MarkDownRenderer source={data.issue.body} />

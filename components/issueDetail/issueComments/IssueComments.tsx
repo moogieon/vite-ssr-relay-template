@@ -47,7 +47,7 @@ const IssueCommentsComponent: React.FC<Props> = ({ comment }) => {
               </span>
             </div>
           </div>
-          <MarkDownRenderer contents={data.body} />
+          <MarkDownRenderer source={data.body} />
         </div>
       </div>
     </>
