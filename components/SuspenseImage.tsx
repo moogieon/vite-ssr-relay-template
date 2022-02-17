@@ -1,7 +1,7 @@
 import React from 'react'
 import JSResource from './JSResource'
 
-const SuspenseImage: React.FC = (
+const SuspenseImage: React.FC= (
   props: React.ImgHTMLAttributes<HTMLImageElement>
 ) => {
   const { src } = props
@@ -22,6 +22,6 @@ const SuspenseImage: React.FC = (
     resource.load() // TODO: JSResource::read() should call load() if necessary
     resource.read() // suspends while the image is pending
   }
-  return <img {...props} className="rounded-1/2 border w-20 h-20 mr-2" />
+  return <img {...props} />
 }
 export default SuspenseImage
