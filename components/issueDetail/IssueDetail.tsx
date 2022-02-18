@@ -47,6 +47,7 @@ const IssueDetailComponent: React.FC<Props> = ({ repository }) => {
           <div className="flex">
             {typeof window !== 'undefined' ? (
               <SuspenseImage
+                className="rounded-1/2 border w-20 h-20 mr-2"
                 alt={`${data.issue.author?.login}'s avatar`}
                 src={data.issue.author?.avatarUrl}
               />
