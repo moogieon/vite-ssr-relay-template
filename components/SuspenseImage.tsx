@@ -1,8 +1,8 @@
 import React from 'react'
 import JSResource from './JSResource'
 
-const SuspenseImage: React.FC= (
-  props: React.ImgHTMLAttributes<HTMLImageElement>
+const SuspenseImage: React.FC<React.ImgHTMLAttributes<HTMLImageElement>> = (
+  props
 ) => {
   const { src } = props
   if (src != null) {

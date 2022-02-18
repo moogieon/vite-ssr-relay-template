@@ -1,14 +1,16 @@
 import React, { Suspense, useTransition } from 'react'
 import { graphql, usePaginationFragment } from 'react-relay'
 import Button from '../../Button'
+import { Reactions_query$key } from '../__generated__/Reactions_query.graphql'
 import IssueCommentsComponent from './IssueComments'
 import { IssueCommentsList_issue$key } from './__generated__/IssueCommentsList_issue.graphql'
 
 interface Props {
   issue: IssueCommentsList_issue$key
+  query: Reactions_query$key
 }
 
-const IssueCommentsListComponent: React.FC<Props> = ({ issue }) => {
+const IssueCommentsListComponent: React.FC<Props> = ({ issue, query }) => {
   const [isPending, startTransition] = useTransition()
   const { data, isLoadingNext, loadNext } = usePaginationFragment(
     graphql`
@@ -40,7 +42,7 @@ const IssueCommentsListComponent: React.FC<Props> = ({ issue }) => {
                 edge?.node && (
                   <li key={i} className="my-10 pl-2">
                     <Suspense fallback={null}>
-                      <IssueCommentsComponent comment={edge?.node} />
+                      <IssueCommentsComponent comment={edge?.node} query={query} />
                     </Suspense>
                   </li>
                 )

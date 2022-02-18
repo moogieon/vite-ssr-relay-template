@@ -36,6 +36,7 @@ export const query = graphql`
     repository(name: $name, owner: $owner) {
       ...IssueDetail_repository
     }
+    ...Reactions_query
   }
 `
 
@@ -46,7 +47,7 @@ export const Page: React.FC<Props> = ({ queryRef }) => {
     <>
       {data.repository && (
         <React.Suspense fallback="Loading...">
-          <IssueDetailComponent repository={data.repository} />
+          <IssueDetailComponent repository={data.repository} query={data} />
         </React.Suspense>
       )}
     </>
