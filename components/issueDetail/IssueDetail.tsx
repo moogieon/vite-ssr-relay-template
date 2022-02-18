@@ -4,13 +4,15 @@ import { IssueDetail_repository$key } from './__generated__/IssueDetail_reposito
 import MarkDownRenderer from '../MarkDownRenderer'
 import SuspenseImage from '../SuspenseImage'
 import IssueCommentsListComponent from './issueComments/IssueCommentsList'
-import translate from 'moji-translate'
 import { AddReaction } from '../../pages/addReaction'
+import Reactions from './Reactions'
+import { Reactions_query$key } from './__generated__/Reactions_query.graphql'
 interface Props {
   repository: IssueDetail_repository$key
+  query: Reactions_query$key
 }
 
-const IssueDetailComponent: React.FC<Props> = ({ repository }) => {
+const IssueDetailComponent: React.FC<Props> = ({ repository, query }) => {
   const data = useFragment(
     graphql`
       fragment IssueDetail_repository on Repository {
@@ -25,11 +27,7 @@ const IssueDetailComponent: React.FC<Props> = ({ repository }) => {
             login
             avatarUrl
           }
-          reactions(first: $first) {
-            nodes {
-              content
-            }
-          }
+          ...Reactions_reactable
           ...IssueCommentsList_issue
         }
       }
@@ -65,26 +63,13 @@ const IssueDetailComponent: React.FC<Props> = ({ repository }) => {
                   <span className="border rounded-lg text-sm">
                     {data.issue.authorAssociation}
                   </span>
-                  <ul className="flex">
-                    {data.issue.reactions.nodes?.map((emo, idx) => (
-                      <li
-                        key={idx}
-                        className="rounded-1/2 border w-7 text-center mr-1"
-                      >
-                        {translate.translate(emo?.content.replace('_', ''))}
-                      </li>
-                    ))}
-                  </ul>
-                  <AddReaction
-                    id={data.issue.id}
-                    reactions={data.issue.reactions.nodes}
-                  />
+                  <Reactions reactable={data.issue} query={query} />
                 </div>
               </div>
               <MarkDownRenderer source={data.issue.body} />
             </div>
           </div>
-          <IssueCommentsListComponent issue={data.issue} />
+          <IssueCommentsListComponent issue={data.issue} query={query} />
         </div>
       )}
     </>

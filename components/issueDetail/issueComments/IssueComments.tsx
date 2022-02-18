@@ -2,13 +2,16 @@ import React from 'react'
 import { useFragment, graphql } from 'react-relay'
 import MarkDownRenderer from '../../MarkDownRenderer'
 import SuspenseImage from '../../SuspenseImage'
+import Reactions from '../Reactions'
+import { Reactions_query$key } from '../__generated__/Reactions_query.graphql'
 import { IssueComments_comment$key } from './__generated__/IssueComments_comment.graphql'
 
 interface Props {
   comment: IssueComments_comment$key
+  query: Reactions_query$key
 }
 
-const IssueCommentsComponent: React.FC<Props> = ({ comment }) => {
+const IssueCommentsComponent: React.FC<Props> = ({ comment, query }) => {
   const data = useFragment(
     graphql`
       fragment IssueComments_comment on Comment {
@@ -19,6 +22,7 @@ const IssueCommentsComponent: React.FC<Props> = ({ comment }) => {
         }
         createdAt
         authorAssociation
+        ...Reactions_reactable
       }
     `,
     comment
@@ -48,6 +52,7 @@ const IssueCommentsComponent: React.FC<Props> = ({ comment }) => {
             </div>
           </div>
           <MarkDownRenderer source={data.body} />
+          <Reactions reactable={data} query={query} />
         </div>
       </div>
     </>
